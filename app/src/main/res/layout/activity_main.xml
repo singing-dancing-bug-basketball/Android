@@ -1,47 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/colorLight"
-    tools:context=".MainActivity">
+<androidx.drawerlayout.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorLight"
+        android:id="@+id/drawer"
+        tools:context=".MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorBackground">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/colorLight">
 
-        <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="10dp"
-                android:layout_gravity="start"
-                android:src="@drawable/ic_menu"
-                android:background="@color/colorBackground"
-                android:id="@+id/more_button"/>
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorLight">
 
-        <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="10dp"
-                android:layout_gravity="end"
-                android:src="@drawable/ic_refresh"
-                android:background="@color/colorBackground"
-                android:id="@+id/refresh_button"/>
+            <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="start"
+                    android:src="@drawable/ic_menu"
+                    android:background="@color/colorLight"
+                    android:id="@+id/menu_button"/>
 
-        <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="10dp"
-                android:layout_gravity="end"
-                android:src="@drawable/ic_search"
-                android:background="@color/colorBackground"
-                android:id="@+id/search_button"/>
+            <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="end"
+                    android:src="@drawable/ic_refresh"
+                    android:background="@color/colorLight"
+                    android:id="@+id/refresh_button"/>
 
-    </androidx.appcompat.widget.Toolbar>
+            <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="end"
+                    android:src="@drawable/ic_search"
+                    android:background="@color/colorLight"
+                    android:id="@+id/search_button"/>
 
-    <include layout="@layout/content_main"/>
+        </androidx.appcompat.widget.Toolbar>
 
-</LinearLayout>
+    </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigation"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/navigation_header"
+            app:menu="@menu/menu_navigation_main" />
+
+</androidx.drawerlayout.widget.DrawerLayout>
