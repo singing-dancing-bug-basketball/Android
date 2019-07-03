@@ -14,6 +14,10 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    companion object {
+        @JvmStatic
+        val REQUEST_LOGIN = 0
+    }
     private var logined = false
     private lateinit var toolbar: Toolbar
     private lateinit var drawer: DrawerLayout
@@ -36,15 +40,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         override fun onDrawerOpened(drawerView: View) {
             val loginLogout: Button = findViewById(R.id.login_logout)
             loginLogout.setText(if (logined) R.string.logout else R.string.login)
-            loginLogout.setOnClickListener {
-                if (logined) {
-                    logout()
-                    loginLogout.setText(R.string.login)
-                } else {
-                    login()
-                    loginLogout.setText(R.string.logout)
-                }
-            }
+            loginLogout.setOnClickListener { if (logined) logout() else login() }
         }
     }
 
@@ -81,13 +77,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        println(resultCode)
+        if (requestCode == REQUEST_LOGIN) {
+            logined = data?.getBooleanExtra("logined", false) ?: false
+            loadData()
+        }
+    }
+
     private fun login() {
         val loginIntent = Intent(this, Login::class.java)
-        startActivity(loginIntent)
-        logined = true
+        startActivityForResult(loginIntent, REQUEST_LOGIN)
     }
 
     private fun logout() {
         logined = false
+        loadData()
+    }
+
+    private fun loadData() {
+        val loginLogout: Button = findViewById(R.id.login_logout)
+        if (logined) {
+            loginLogout.setText(R.string.logout)
+        } else {
+            loginLogout.setText(R.string.login)
+        }
     }
 }
