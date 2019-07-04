@@ -10,4 +10,5 @@
     <string name="exam">测验</string>
     <string name="history">历史</string>
     <string name="about">关于</string>
+    <string name="minute">分钟</string>
 </resources>

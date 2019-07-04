@@ -11,6 +11,10 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.forEach
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import com.nickyc975.android.fragment.AboutFragment
+import com.nickyc975.android.fragment.ExamsFragment
+import com.nickyc975.android.fragment.HistoriesFragment
+import com.nickyc975.android.fragment.ToolbarFragment
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     companion object {
