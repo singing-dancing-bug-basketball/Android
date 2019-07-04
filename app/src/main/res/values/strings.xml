@@ -10,5 +10,8 @@
     <string name="exam">测验</string>
     <string name="history">历史</string>
     <string name="about">关于</string>
-    <string name="minute">分钟</string>
+    <string name="deadline">截止日期: %1$s</string>
+    <string name="time">考试时间: %1$d 分钟</string>
+    <string name="total_score">总分: %1$.2f</string>
+    <string name="user_score">得分: %1$.2f</string>
 </resources>

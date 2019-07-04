@@ -8,7 +8,10 @@
     <TextView
             android:id="@+id/exam_title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"/>
 
     <LinearLayout
             android:layout_width="match_parent"
@@ -18,22 +21,30 @@
         <TextView
                 android:id="@+id/exam_ddl"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:padding="5dp"/>
 
         <TextView
                 android:id="@+id/exam_time"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:padding="5dp"/>
 
         <TextView
                 android:id="@+id/exam_total_score"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:padding="5dp"/>
 
         <TextView
                 android:id="@+id/exam_user_core"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:padding="5dp"/>
     </LinearLayout>
 
 </LinearLayout>
