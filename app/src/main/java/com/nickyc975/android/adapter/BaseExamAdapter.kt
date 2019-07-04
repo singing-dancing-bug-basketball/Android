@@ -21,7 +21,6 @@ abstract class BaseExamAdapter(protected val activity: Activity, var exams: List
 
         val deadline = DateFormat.format("yyyy-MM-dd", exam.deadline)
         (view.findViewById(R.id.exam_ddl) as TextView).text = activity.getString(R.string.deadline, deadline)
-        (view.findViewById(R.id.exam_time) as TextView).text = activity.getString(R.string.time, exam.paper.time)
         (view.findViewById(R.id.exam_total_score) as TextView).text = activity.getString(R.string.total_score, exam.paper.totalScore)
         return view
     }

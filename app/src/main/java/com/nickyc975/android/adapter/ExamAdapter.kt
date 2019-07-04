@@ -10,7 +10,8 @@ import com.nickyc975.android.data.Exam
 class ExamAdapter(activity: Activity, exams: List<Exam>): BaseExamAdapter(activity, exams) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = super.getView(position, convertView, parent)
-        (view.findViewById(R.id.exam_user_core) as TextView).visibility = View.INVISIBLE
+        (view.findViewById(R.id.exam_time) as TextView).text = activity.getString(R.string.time, exams[position].paper.time)
+        (view.findViewById(R.id.exam_user_core) as TextView).visibility = View.GONE
         return view
     }
 }
