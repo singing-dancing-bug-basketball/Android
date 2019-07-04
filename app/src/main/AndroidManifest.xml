@@ -9,7 +9,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true">
         <activity
-                android:name=".Login"
+                android:name=".LoginActivity"
                 android:label="@string/login"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>

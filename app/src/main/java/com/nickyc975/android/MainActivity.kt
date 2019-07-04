@@ -7,9 +7,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
-import android.widget.ImageButton
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.core.view.forEach
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 
@@ -18,11 +17,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         @JvmStatic
         val REQUEST_LOGIN = 0
     }
+
+    lateinit var drawer: DrawerLayout
+    lateinit var navigation: NavigationView
+
     private var logined = false
-    private lateinit var toolbar: Toolbar
-    private lateinit var drawer: DrawerLayout
-    private lateinit var navigation: NavigationView
-    private lateinit var menuButton: ImageButton
+    private var loginLogoutButton: Button? = null
 
     private var drawerListener = object: DrawerLayout.DrawerListener {
         override fun onDrawerStateChanged(newState: Int) {
@@ -38,21 +38,46 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         override fun onDrawerOpened(drawerView: View) {
-            val loginLogout: Button = findViewById(R.id.login_logout)
-            loginLogout.setText(if (logined) R.string.logout else R.string.login)
-            loginLogout.setOnClickListener { if (logined) logout() else login() }
+            if (loginLogoutButton === null) {
+                loginLogoutButton = findViewById(R.id.login_logout)
+                loginLogoutButton?.setText(
+                    if (logined)
+                        R.string.logout
+                    else
+                        R.string.login
+                )
+                loginLogoutButton?.setOnClickListener {
+                    if (logined)
+                        logout()
+                    else
+                        login()
+                }
+            }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        toolbar = findViewById(R.id.toolbar)
         drawer = findViewById(R.id.drawer)
         navigation = findViewById(R.id.navigation)
-        menuButton = findViewById(R.id.menu_button)
-        menuButton.setOnClickListener { drawer.openDrawer(GravityCompat.START) }
+
         drawer.addDrawerListener(drawerListener)
+        navigation.setNavigationItemSelectedListener(this)
+        if (savedInstanceState === null) {
+            navigation.menu.findItem(R.id.exams).isChecked = true
+            displayFragment(ExamsFragment())
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        loginLogoutButton?.setText(
+            if (logined)
+                R.string.logout
+            else
+                R.string.login
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -62,11 +87,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.history -> return true
-            R.id.about -> return true
-            else -> return false
+        if (item.isChecked) {
+            drawer.closeDrawer(GravityCompat.START)
+        } else {
+            when (item.itemId) {
+                R.id.exams -> displayFragment(ExamsFragment())
+                R.id.histories -> displayFragment(HistoriesFragment())
+                R.id.about -> displayFragment(AboutFragment())
+                else -> return false
+            }
+            navigation.menu.forEach { it.isChecked = false }
+            item.isChecked = true
         }
+        return true
     }
 
     override fun onBackPressed() {
@@ -78,29 +111,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        println(resultCode)
         if (requestCode == REQUEST_LOGIN) {
             logined = data?.getBooleanExtra("logined", false) ?: false
-            loadData()
         }
     }
 
+    private fun displayFragment(fragment: ToolbarFragment) {
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_holder, fragment).commitAllowingStateLoss()
+        drawer.closeDrawer(GravityCompat.START)
+    }
+
     private fun login() {
-        val loginIntent = Intent(this, Login::class.java)
+        val loginIntent = Intent(this, LoginActivity::class.java)
         startActivityForResult(loginIntent, REQUEST_LOGIN)
     }
 
     private fun logout() {
         logined = false
-        loadData()
-    }
-
-    private fun loadData() {
-        val loginLogout: Button = findViewById(R.id.login_logout)
-        if (logined) {
-            loginLogout.setText(R.string.logout)
-        } else {
-            loginLogout.setText(R.string.login)
-        }
+        loginLogoutButton?.setText(R.string.login)
     }
 }

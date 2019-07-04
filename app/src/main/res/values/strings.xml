@@ -7,7 +7,7 @@
     <string name="welcome">欢迎登录！</string>
     <string name="input_username">输入学号</string>
     <string name="input_password">输入密码</string>
-    <string name="latest">最新测验</string>
-    <string name="history">测验历史</string>
+    <string name="exam">测验</string>
+    <string name="history">历史</string>
     <string name="about">关于</string>
 </resources>

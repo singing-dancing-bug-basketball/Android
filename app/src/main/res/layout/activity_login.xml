@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:padding="24dp"
-        tools:context=".Login">
+        tools:context=".LoginActivity">
 
         <TextView
                 android:gravity="center"

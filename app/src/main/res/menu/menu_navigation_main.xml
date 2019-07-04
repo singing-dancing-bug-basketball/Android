@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/latest"
-          android:title="@string/latest"/>
-    <item android:id="@+id/history"
-          android:title="@string/history"/>
-    <item android:id="@+id/about"
-          android:title="@string/about"/>
+    <item
+            android:id="@+id/exams"
+            android:title="@string/exam"
+            android:icon="@drawable/ic_exam"/>
+    <item
+            android:id="@+id/histories"
+            android:title="@string/history"
+            android:icon="@drawable/ic_history"/>
+    <item
+            android:id="@+id/about"
+            android:title="@string/about"
+            android:icon="@drawable/ic_about"/>
 </menu>
