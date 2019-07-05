@@ -1,4 +1,4 @@
-package com.nickyc975.android.fragment
+package com.nickyc975.android.view
 
 import android.os.Bundle
 import android.view.View
@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.nickyc975.android.MainActivity
 import com.nickyc975.android.R
 
-open class ToolbarFragment: Fragment() {
+abstract class ToolbarFragment: Fragment() {
     open lateinit var toolbar: Toolbar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

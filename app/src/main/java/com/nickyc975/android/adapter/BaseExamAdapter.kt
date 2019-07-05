@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import com.nickyc975.android.R
-import com.nickyc975.android.data.Exam
+import com.nickyc975.android.model.Exam
 
 abstract class BaseExamAdapter(protected val activity: Activity, var exams: List<Exam>): BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -21,7 +21,7 @@ abstract class BaseExamAdapter(protected val activity: Activity, var exams: List
 
         val deadline = DateFormat.format("yyyy-MM-dd", exam.deadline)
         (view.findViewById(R.id.exam_ddl) as TextView).text = activity.getString(R.string.deadline, deadline)
-        (view.findViewById(R.id.exam_total_score) as TextView).text = activity.getString(R.string.total_score, exam.paper.totalScore)
+        (view.findViewById(R.id.exam_total_score) as TextView).text = activity.getString(R.string.total_score, exam.totalScore)
         return view
     }
 

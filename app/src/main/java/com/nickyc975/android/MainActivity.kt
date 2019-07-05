@@ -10,11 +10,14 @@ import android.widget.Button
 import androidx.core.view.GravityCompat
 import androidx.core.view.forEach
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.room.Room
 import com.google.android.material.navigation.NavigationView
-import com.nickyc975.android.fragment.AboutFragment
-import com.nickyc975.android.fragment.ExamsFragment
-import com.nickyc975.android.fragment.HistoriesFragment
-import com.nickyc975.android.fragment.ToolbarFragment
+import com.nickyc975.android.view.AboutFragment
+import com.nickyc975.android.view.ExamsFragment
+import com.nickyc975.android.view.HistoriesFragment
+import com.nickyc975.android.view.ToolbarFragment
+import com.nickyc975.android.model.AppDatabase
+import com.nickyc975.android.model.Model
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     companion object {
@@ -72,6 +75,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             navigation.menu.findItem(R.id.exams).isChecked = true
             displayFragment(ExamsFragment())
         }
+
+        Model.setDatabase(Room.databaseBuilder(this, AppDatabase::class.java, "android_db").build())
     }
 
     override fun onStart() {

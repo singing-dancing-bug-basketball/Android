@@ -1,4 +1,4 @@
-package com.nickyc975.android.data
+package com.nickyc975.android.model
 
 data class Question(
     val id: Int,

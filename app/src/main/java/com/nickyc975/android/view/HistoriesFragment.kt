@@ -1,4 +1,4 @@
-package com.nickyc975.android.fragment
+package com.nickyc975.android.view
 
 import android.app.Activity
 import android.os.Bundle
@@ -7,8 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import com.nickyc975.android.R
-import com.nickyc975.android.adapter.Data
-import com.nickyc975.android.adapter.ExamAdapter
+import com.nickyc975.android.model.Data
 import com.nickyc975.android.adapter.HistoryAdapter
 
 class HistoriesFragment: ToolbarFragment() {
