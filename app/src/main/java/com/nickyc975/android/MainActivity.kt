@@ -1,23 +1,25 @@
 package com.nickyc975.android
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import androidx.core.view.GravityCompat
 import androidx.core.view.forEach
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.room.Room
 import com.google.android.material.navigation.NavigationView
+import com.nickyc975.android.model.AppDatabase
 import com.nickyc975.android.view.AboutFragment
 import com.nickyc975.android.view.ExamsFragment
 import com.nickyc975.android.view.HistoriesFragment
 import com.nickyc975.android.view.ToolbarFragment
-import com.nickyc975.android.model.AppDatabase
-import com.nickyc975.android.model.Model
+import com.nickyc975.android.model.User
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     companion object {
@@ -26,9 +28,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     lateinit var drawer: DrawerLayout
-    lateinit var navigation: NavigationView
+    private lateinit var navigation: NavigationView
 
-    private var logined = false
+    private var user: User? = null
+    private var database: AppDatabase? = null
+
+    private var userIdTextView: TextView? = null
     private var loginLogoutButton: Button? = null
 
     private var drawerListener = object: DrawerLayout.DrawerListener {
@@ -46,15 +51,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         override fun onDrawerOpened(drawerView: View) {
             if (loginLogoutButton === null) {
+                userIdTextView = findViewById(R.id.drawer_title)
                 loginLogoutButton = findViewById(R.id.login_logout)
-                loginLogoutButton?.setText(
-                    if (logined)
-                        R.string.logout
-                    else
-                        R.string.login
-                )
+
+                if (user !== null) {
+                    userIdTextView?.text = user?.id
+                    loginLogoutButton?.setText(R.string.logout)
+                } else {
+                    userIdTextView?.text = ""
+                    loginLogoutButton?.setText(R.string.login)
+                }
+
                 loginLogoutButton?.setOnClickListener {
-                    if (logined)
+                    if (user !== null)
                         logout()
                     else
                         login()
@@ -63,6 +72,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -71,20 +81,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawer.addDrawerListener(drawerListener)
         navigation.setNavigationItemSelectedListener(this)
-        if (savedInstanceState === null) {
-            navigation.menu.findItem(R.id.exams).isChecked = true
-            displayFragment(ExamsFragment())
-        }
-    }
 
-    override fun onStart() {
-        super.onStart()
-        loginLogoutButton?.setText(
-            if (logined)
-                R.string.logout
-            else
-                R.string.login
-        )
+        object: AsyncTask<Void, Void, Void?>() {
+            override fun doInBackground(vararg params: Void?): Void? {
+                database = AppDatabase.getDatabase(this@MainActivity)
+                if (User.isLogedin(this@MainActivity)) {
+                    user = database?.userDao()?.current()
+                }
+
+                if (savedInstanceState === null) {
+                    navigation.menu.findItem(R.id.exams).isChecked = true
+                    displayFragment(ExamsFragment())
+                }
+                return null
+            }
+        }.execute()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -119,7 +130,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_LOGIN) {
-            logined = data?.getBooleanExtra("logined", false) ?: false
+            user = data?.getSerializableExtra("user") as User?
+            if (user !== null) {
+                userIdTextView?.text = user?.id
+                loginLogoutButton?.setText(R.string.logout)
+            }
         }
     }
 
@@ -133,8 +148,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         startActivityForResult(loginIntent, REQUEST_LOGIN)
     }
 
+    @SuppressLint("StaticFieldLeak")
     private fun logout() {
-        logined = false
+        object: AsyncTask<Void, Void, Void?>() {
+            override fun doInBackground(vararg params: Void?): Void? {
+                User.logout(this@MainActivity)
+                return null
+            }
+        }
+
+        user = null
+        userIdTextView?.text = ""
         loginLogoutButton?.setText(R.string.login)
     }
 }

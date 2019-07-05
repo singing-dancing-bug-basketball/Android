@@ -26,7 +26,6 @@ class ExamsFragment: ToolbarFragment() {
         examList = view.findViewById(R.id.exam_list)
         examsRefresh = view.findViewById(R.id.exams_refresh)
         examAdapter = ExamAdapter(activity as Activity, listOf())
-
         examList.adapter = examAdapter
         examsRefresh.setOnRefreshListener {
             examAdapter.exams = Data.exams

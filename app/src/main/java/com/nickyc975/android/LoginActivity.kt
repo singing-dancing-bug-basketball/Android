@@ -1,10 +1,10 @@
 package com.nickyc975.android
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -12,11 +12,7 @@ import android.widget.Toast
 import com.nickyc975.android.model.User
 
 class LoginActivity : AppCompatActivity() {
-    companion object {
-        @JvmStatic
-        private val LOG_TAG = "LoginActivity"
-    }
-
+    lateinit var failedReason: FailReason
     private lateinit var username: TextView
     private lateinit var password: TextView
     private lateinit var loginButton: Button
@@ -47,7 +43,19 @@ class LoginActivity : AppCompatActivity() {
         username.isEnabled = true
         password.isEnabled = true
         loginButton.isEnabled = true
-        Log.d(LOG_TAG, user?.id)
+        if (user !== null) {
+            val intent = Intent()
+            intent.putExtra("user", user)
+            setResult(MainActivity.REQUEST_LOGIN, intent)
+            finish()
+        } else {
+            val messageId = when (failedReason) {
+                FailReason.NETWORK_ERROR -> R.string.network_error
+                FailReason.USERNAME_PASSWORD_ERROR -> R.string.invalid_username_password
+                else -> R.string.unknown_error
+            }
+            Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show()
+        }
     }
 
     @SuppressLint("StaticFieldLeak")

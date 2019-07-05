@@ -11,7 +11,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/stu_id"
             android:textColor="@color/colorDark"
             android:textSize="32sp"/>
 
