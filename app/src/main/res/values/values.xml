@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="base_url">http://192.168.43.136:80/student/%1$s</string>
+    <string name="login_url">login/</string>
+    <string name="exam_url">test/</string>
+    <string name="exam_list_url">test/list/</string>
+    <string name="history_url">record/</string>
+    <string name="history_list_url">record/list/</string>
+</resources>

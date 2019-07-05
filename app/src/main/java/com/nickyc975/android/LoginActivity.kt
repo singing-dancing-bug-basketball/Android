@@ -53,7 +53,7 @@ class LoginActivity : AppCompatActivity() {
     @SuppressLint("StaticFieldLeak")
     inner class LoginTask: AsyncTask<String, Void, User?>() {
         override fun doInBackground(vararg params: String?): User? {
-            return User.login(params[0].orEmpty(), params[1].orEmpty())
+            return User.login(this@LoginActivity, params[0].orEmpty(), params[1].orEmpty())
         }
 
         override fun onPostExecute(result: User?) {

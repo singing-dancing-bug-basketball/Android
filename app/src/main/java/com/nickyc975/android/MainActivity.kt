@@ -75,8 +75,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             navigation.menu.findItem(R.id.exams).isChecked = true
             displayFragment(ExamsFragment())
         }
-
-        Model.setDatabase(Room.databaseBuilder(this, AppDatabase::class.java, "android_db").build())
     }
 
     override fun onStart() {
