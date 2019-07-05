@@ -82,16 +82,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer.addDrawerListener(drawerListener)
         navigation.setNavigationItemSelectedListener(this)
 
+        if (savedInstanceState === null) {
+            navigation.menu.findItem(R.id.exams).isChecked = true
+            displayFragment(ExamsFragment())
+        }
+
         object: AsyncTask<Void, Void, Void?>() {
             override fun doInBackground(vararg params: Void?): Void? {
                 database = AppDatabase.getDatabase(this@MainActivity)
                 if (User.isLogedin(this@MainActivity)) {
                     user = database?.userDao()?.current()
-                }
-
-                if (savedInstanceState === null) {
-                    navigation.menu.findItem(R.id.exams).isChecked = true
-                    displayFragment(ExamsFragment())
                 }
                 return null
             }
