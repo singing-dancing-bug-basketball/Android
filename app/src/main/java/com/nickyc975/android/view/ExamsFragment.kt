@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ListView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.nickyc975.android.R
@@ -15,6 +16,13 @@ class ExamsFragment: ToolbarFragment() {
     private lateinit var examList: ListView
     private lateinit var examAdapter: ExamAdapter
     private lateinit var examsRefresh: SwipeRefreshLayout
+
+    private object listener: AdapterView.OnItemClickListener {
+        override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+
+        }
+
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.layout_exams, container, false)
@@ -32,5 +40,6 @@ class ExamsFragment: ToolbarFragment() {
             examAdapter.notifyDataSetChanged()
             examsRefresh.isRefreshing = false
         }
+        examList.onItemClickListener = listener
     }
 }
