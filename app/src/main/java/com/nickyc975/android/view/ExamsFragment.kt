@@ -1,6 +1,7 @@
 package com.nickyc975.android.view
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.nickyc975.android.ExamActivity
 import com.nickyc975.android.R
 import com.nickyc975.android.model.Data
 import com.nickyc975.android.adapter.ExamAdapter
@@ -17,11 +19,9 @@ class ExamsFragment: ToolbarFragment() {
     private lateinit var examAdapter: ExamAdapter
     private lateinit var examsRefresh: SwipeRefreshLayout
 
-    private object listener: AdapterView.OnItemClickListener {
-        override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-
-        }
-
+    private var listener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        val intent = Intent(this@ExamsFragment.context, ExamActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

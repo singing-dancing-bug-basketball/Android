@@ -21,8 +21,7 @@
                 android:layout_weight="50"
                 android:id="@+id/question_left"
                 android:gravity="start"
-                android:textSize="24sp"
-                android:text="30/30"/>
+                android:textSize="24sp"/>
 
         <TextView
                 android:layout_width="0dp"
@@ -30,8 +29,7 @@
                 android:layout_weight="50"
                 android:id="@+id/time_left"
                 android:gravity="end"
-                android:textSize="24sp"
-                android:text="00:00:00"/>
+                android:textSize="24sp"/>
 
     </LinearLayout>
 
@@ -52,7 +50,7 @@
                 android:id="@+id/submit_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-        />
+                android:text="@string/submit"/>
 
     </LinearLayout>
 
