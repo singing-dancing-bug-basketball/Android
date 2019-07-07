@@ -36,4 +36,6 @@ abstract class BaseExamAdapter(protected val activity: Activity, var exams: List
     override fun getCount(): Int {
         return exams.size
     }
+
+    abstract suspend fun reload()
 }

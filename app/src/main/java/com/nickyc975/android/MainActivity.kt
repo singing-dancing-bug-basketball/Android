@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     lateinit var drawer: DrawerLayout
     private lateinit var navigation: NavigationView
+    private lateinit var currentFragment: ToolbarFragment
 
     private var user: User? = null
     private var database: AppDatabase? = null
@@ -72,6 +73,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    private fun setCurrentFragment(fragment: ToolbarFragment) {
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_holder, fragment).commitAllowingStateLoss()
+        drawer.closeDrawer(GravityCompat.START)
+        currentFragment = fragment
+    }
+
     @SuppressLint("StaticFieldLeak")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,18 +91,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         if (savedInstanceState === null) {
             navigation.menu.findItem(R.id.exams).isChecked = true
-            displayFragment(ExamsFragment())
-        }
+            setCurrentFragment(ExamsFragment())
 
-        object: AsyncTask<Void, Void, Void?>() {
-            override fun doInBackground(vararg params: Void?): Void? {
-                database = AppDatabase.getDatabase(this@MainActivity)
-                if (User.isLogedin(this@MainActivity)) {
-                    user = database?.userDao()?.current()
+            object: AsyncTask<Void, Void, Void?>() {
+                override fun doInBackground(vararg params: Void?): Void? {
+                    database = AppDatabase.getDatabase(this@MainActivity)
+                    if (User.isLogedin(this@MainActivity)) {
+                        user = database?.userDao()?.current()
+                    } else {
+                        user = User("123456789", "askkdfaskjdhnflkalskdj")
+                        database?.userDao()?.insert(user!!)
+                    }
+                    currentFragment.requireRefresh()
+                    return null
                 }
-                return null
-            }
-        }.execute()
+            }.execute()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -109,9 +120,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             drawer.closeDrawer(GravityCompat.START)
         } else {
             when (item.itemId) {
-                R.id.exams -> displayFragment(ExamsFragment())
-                R.id.histories -> displayFragment(HistoriesFragment())
-                R.id.about -> displayFragment(AboutFragment())
+                R.id.exams -> setCurrentFragment(ExamsFragment())
+                R.id.histories -> setCurrentFragment(HistoriesFragment())
+                R.id.about -> setCurrentFragment(AboutFragment())
                 else -> return false
             }
             navigation.menu.forEach { it.isChecked = false }
@@ -134,13 +145,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (user !== null) {
                 userIdTextView?.text = user?.id
                 loginLogoutButton?.setText(R.string.logout)
+                currentFragment.requireRefresh()
             }
         }
-    }
-
-    private fun displayFragment(fragment: ToolbarFragment) {
-        supportFragmentManager.beginTransaction().replace(R.id.fragment_holder, fragment).commitAllowingStateLoss()
-        drawer.closeDrawer(GravityCompat.START)
     }
 
     private fun login() {

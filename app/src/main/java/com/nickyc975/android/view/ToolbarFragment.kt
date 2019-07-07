@@ -11,6 +11,8 @@ import com.nickyc975.android.R
 abstract class ToolbarFragment: Fragment() {
     open lateinit var toolbar: Toolbar
 
+    abstract fun requireRefresh()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbar = view.rootView.findViewById(R.id.toolbar)

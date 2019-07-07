@@ -11,6 +11,10 @@ import com.nickyc975.android.model.Data
 import com.nickyc975.android.adapter.HistoryAdapter
 
 class HistoriesFragment: ToolbarFragment() {
+    override fun requireRefresh() {
+
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.layout_histories, container, false)
     }

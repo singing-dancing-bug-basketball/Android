@@ -7,6 +7,10 @@ import android.view.ViewGroup
 import com.nickyc975.android.R
 
 class AboutFragment: ToolbarFragment() {
+    override fun requireRefresh() {
+
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.layout_about, container, false)
     }
