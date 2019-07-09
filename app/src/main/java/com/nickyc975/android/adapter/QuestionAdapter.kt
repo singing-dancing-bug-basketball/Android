@@ -9,7 +9,7 @@ import com.nickyc975.android.ExamActivity
 import com.nickyc975.android.R
 import com.nickyc975.android.model.Question
 
-class QuestionAdapter(private val activity: ExamActivity, private var questions: List<Question>): BaseAdapter() {
+class QuestionAdapter(private val activity: ExamActivity, private val questions: List<Question>): BaseAdapter() {
     companion object {
         class ValuableRadioButton<T>(context: Context): RadioButton(context) {
             var value: T? = null
@@ -21,32 +21,22 @@ class QuestionAdapter(private val activity: ExamActivity, private var questions:
         }
     }
 
+    private val views: Array<View?> = arrayOfNulls(questions.size)
+
     @SuppressLint("SetTextI18n")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val question = questions[position]
-        val view: View = convertView ?: activity.layoutInflater.inflate(
-            R.layout.question_item, parent, false
-        )
-
-        view.findViewById<TextView>(R.id.question).text = "$position. ${question.title}"
-        val radioGroup = view.findViewById<RadioGroup>(R.id.options)
-        radioGroup.removeAllViews()
-        for ((key, value) in question.options) {
-            val radio = ValuableRadioButton(activity, "$key. $value", key)
-            radioGroup.addView(radio)
-            if (radio.value == question.selected) {
-                radioGroup.check(radio.id)
+        if (views[position] === null) {
+            val question = questions[position]
+            val view = activity.layoutInflater.inflate(R.layout.question_item, parent, false)
+            val radioGroup = view.findViewById<RadioGroup>(R.id.options)
+            for ((option, detail) in question.options) {
+                radioGroup.addView(ValuableRadioButton(activity, "$option. $detail", option))
             }
-            radio.setOnCheckedChangeListener { buttonView, isChecked ->
-                if (isChecked) {
-                    question.selected = (buttonView as ValuableRadioButton<*>).value as String
-                }
-            }
+            view.findViewById<TextView>(R.id.question).text = "$position. ${question.title}"
+            view.findViewById<TextView>(R.id.answer).visibility = View.GONE
+            views[position] = view
         }
-
-        view.findViewById<TextView>(R.id.answer).visibility = View.GONE
-
-        return view
+        return views[position]!!
     }
 
     override fun getItem(position: Int): Question {
