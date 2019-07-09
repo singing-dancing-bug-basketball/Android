@@ -7,25 +7,25 @@ import android.os.Handler
 import android.os.Message
 import android.text.format.DateUtils
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.ListView
-import android.widget.TextView
+import android.widget.*
 import com.nickyc975.android.adapter.QuestionAdapter
 import com.nickyc975.android.model.Exam
 import com.nickyc975.android.model.Question
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class ExamActivity : AppCompatActivity() {
     private lateinit var exam: Exam
     private lateinit var timeLeft: TextView
     private lateinit var questionLeft: TextView
     private lateinit var questionList: ListView
+    private lateinit var questionAdapter: QuestionAdapter
 
     private val startHandler = @SuppressLint("HandlerLeak")
     object: Handler() {
         override fun handleMessage(msg: Message?) {
             super.handleMessage(msg)
-            postStartExam()
+            startExam()
         }
     }
 
@@ -52,19 +52,26 @@ class ExamActivity : AppCompatActivity() {
         exam = intent.getSerializableExtra("exam") as Exam
         timeLeft.text = DateUtils.formatElapsedTime(exam.time.toLong() * 60)
         questionLeft.text = "0/${exam.numQuestions}"
-        val startButton: Button = findViewById(R.id.start_exam_button)
+        findViewById<Button>(R.id.start_exam_button).setOnClickListener { button ->
+            button.isEnabled = false
+            GlobalScope.launch {
+                questionAdapter = QuestionAdapter(this@ExamActivity, Question.list(exam.id))
+                startHandler.sendEmptyMessage(0)
+            }
+        }
     }
 
     private fun startExam() {
-        val submitFrame: LinearLayout = this.layoutInflater.inflate(
-            R.layout.submit_button, questionList, false) as LinearLayout
-        val submitButton: Button = submitFrame.findViewById(R.id.submit_button)
-        // questionList.adapter = QuestionAdapter(this, Question.list(exam.id))
+        findViewById<View>(R.id.start_exam_frame).visibility = View.GONE
+        val submitFrame = this.layoutInflater.inflate(
+            R.layout.submit_button, questionList, false
+        ) as LinearLayout
         questionList.addFooterView(submitFrame)
-    }
-
-    private fun postStartExam() {
-
+        questionList.adapter = questionAdapter
+        questionList.visibility = View.VISIBLE
+        submitFrame.findViewById<Button>(R.id.submit_button).setOnClickListener { button ->
+            Toast.makeText(this@ExamActivity, "submit!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun submitExam() {
