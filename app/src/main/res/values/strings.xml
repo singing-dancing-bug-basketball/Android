@@ -17,5 +17,6 @@
     <string name="network_error">网络异常，请检查网络连接！</string>
     <string name="invalid_username_password">用户名或密码无效</string>
     <string name="unknown_error">未知错误</string>
+    <string name="start_exam">开始考试</string>
     <string name="submit">提交</string>
 </resources>

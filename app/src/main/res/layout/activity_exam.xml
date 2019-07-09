@@ -33,25 +33,27 @@
 
     </LinearLayout>
 
+    <LinearLayout
+            android:id="@+id/start_exam_frame"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="10dp">
+
+        <Button
+                android:id="@+id/start_exam_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start_exam"/>
+
+    </LinearLayout>
+
     <ListView
             android:id="@+id/question_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
     </ListView>
-
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
-
-        <Button
-                android:id="@+id/submit_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/submit"/>
-
-    </LinearLayout>
 
 </LinearLayout>

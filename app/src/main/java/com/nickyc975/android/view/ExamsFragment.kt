@@ -27,6 +27,7 @@ class ExamsFragment: ToolbarFragment() {
 
     private var listener = AdapterView.OnItemClickListener { parent, view, position, id ->
         val intent = Intent(this@ExamsFragment.context, ExamActivity::class.java)
+        intent.putExtra("exam", examAdapter.getItem(position))
         startActivity(intent)
     }
 
