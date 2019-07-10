@@ -10,15 +10,14 @@ open class Exam protected constructor(
     val deadline: Date,
     val time: Int,
     val totalScore: Double,
-    val numQuestions: Int = 0,
-    val questions: List<Question>? = null
+    val numQuestions: Int = 0
 ) : Model(), Serializable {
     companion object {
         @JvmStatic
         val exams = listOf(
-            Exam(1, "exam_1", Date(), 120, 100.0, 5),
-            Exam(2, "exam_2", Date(), 120, 100.0, 5),
-            Exam(3, "exam_3", Date(), 120, 100.0, 5)
+            Exam(1, "exam_1", Date(), 1, 100.0, 5),
+            Exam(2, "exam_2", Date(), 1, 100.0, 5),
+            Exam(3, "exam_3", Date(), 1, 100.0, 5)
         )
 
         @JvmStatic
@@ -34,10 +33,9 @@ open class Exam protected constructor(
         }
 
         @JvmStatic
-        suspend fun submit(exam: Exam): Boolean {
+        suspend fun submit(examId: Int, result: Map<Int, Int>): Boolean {
             delay(500)
             return true
         }
     }
-
 }

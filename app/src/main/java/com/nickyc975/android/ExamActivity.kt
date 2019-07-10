@@ -1,8 +1,6 @@
 package com.nickyc975.android
 
 import android.annotation.SuppressLint
-import android.app.IntentService
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -15,6 +13,7 @@ import com.nickyc975.android.model.Exam
 import com.nickyc975.android.model.Question
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class ExamActivity : AppCompatActivity() {
@@ -25,6 +24,8 @@ class ExamActivity : AppCompatActivity() {
     private lateinit var timer: Job
     private lateinit var questionAdapter: QuestionAdapter
 
+    private var started = false
+    private var submitted = false
     private var numTimeLeft: Int = 0
     private var numQuestionLeft: Int = 0
 
@@ -48,20 +49,28 @@ class ExamActivity : AppCompatActivity() {
     object: Handler() {
         override fun handleMessage(msg: Message?) {
             super.handleMessage(msg)
-            submitExam()
+            postSubmitExam()
         }
     }
 
     @SuppressLint("SetTextI18n")
     fun onQuestionChecked() {
-        numQuestionLeft--
-        questionLeft.text = "$numQuestionLeft/${exam.numQuestions}"
+        if (numQuestionLeft > 0) {
+            numQuestionLeft--
+            questionLeft.text = "$numQuestionLeft/${exam.numQuestions}"
+        }
     }
 
     @SuppressLint("SetTextI18n")
     fun onTimeCountDown() {
-        numTimeLeft--
-        timeLeft.text = DateUtils.formatElapsedTime(numTimeLeft.toLong())
+        if (numTimeLeft > 0) {
+            numTimeLeft--
+            timeLeft.text = DateUtils.formatElapsedTime(numTimeLeft.toLong())
+        }
+
+        if (numTimeLeft <= 0) {
+            submitExam()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,6 +81,21 @@ class ExamActivity : AppCompatActivity() {
         questionList = findViewById(R.id.question_list)
         exam = intent.getSerializableExtra("exam") as Exam
         initExam()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (started && !submitted) {
+            submitExam()
+        }
+    }
+
+    override fun onBackPressed() {
+        if (started && !submitted) {
+            Toast.makeText(this, R.string.not_submitted, Toast.LENGTH_SHORT).show()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -98,16 +122,10 @@ class ExamActivity : AppCompatActivity() {
         questionList.addFooterView(submitFrame)
         questionList.adapter = questionAdapter
         questionList.visibility = View.VISIBLE
-        submitFrame.findViewById<Button>(R.id.submit_button).setOnClickListener { button ->
-            questionList.isEnabled = false
-            GlobalScope.launch {
-                Exam.submit(exam)
-                submitHandler.sendEmptyMessage(0)
-            }
-        }
+        submitFrame.findViewById<Button>(R.id.submit_button).setOnClickListener { button -> submitExam() }
 
         timer = GlobalScope.launch {
-            while (true) {
+            while (isActive) {
                 try {
                     Thread.sleep(1000)
                 } catch (e: InterruptedException) {
@@ -116,9 +134,22 @@ class ExamActivity : AppCompatActivity() {
                 countDownHandler.sendEmptyMessage(0)
             }
         }
+
+        started = true
     }
 
     private fun submitExam() {
+        timer.cancel()
+        submitted = true
+        questionAdapter.disableAll()
+        findViewById<Button>(R.id.submit_button).isEnabled = false
+        GlobalScope.launch {
+            Exam.submit(exam.id, questionAdapter.getResult())
+            submitHandler.sendEmptyMessage(0)
+        }
+    }
 
+    private fun postSubmitExam() {
+        Toast.makeText(this, R.string.submitted, Toast.LENGTH_SHORT).show()
     }
 }

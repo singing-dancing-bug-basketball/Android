@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.view.forEach
 import com.nickyc975.android.ExamActivity
 import com.nickyc975.android.R
 import com.nickyc975.android.model.Question
@@ -14,9 +15,9 @@ class QuestionAdapter(private val activity: ExamActivity, private val questions:
         class ValuableRadioButton<T>(context: Context): RadioButton(context) {
             var value: T? = null
 
-            constructor(context: Context, text: String, value: T): this(context) {
-                this.text = text
+            constructor(context: Context, value: T, detail: String): this(context) {
                 this.value = value
+                this.text = detail
             }
         }
     }
@@ -30,13 +31,13 @@ class QuestionAdapter(private val activity: ExamActivity, private val questions:
             val view = activity.layoutInflater.inflate(R.layout.question_item, parent, false)
             val radioGroup = view.findViewById<RadioGroup>(R.id.options)
             for ((option, detail) in question.options) {
-                val radio = ValuableRadioButton(activity, "$option. $detail", option)
+                val radio = ValuableRadioButton(activity, option, detail)
                 radio.setOnCheckedChangeListener { buttonView, isChecked ->
                     if (isChecked) {
-                        if (question.selected == null) {
+                        if (radioGroup.checkedRadioButtonId < 0) {
                             activity.onQuestionChecked()
                         }
-                        question.selected = (buttonView as ValuableRadioButton<*>).value as String
+                        question.selected = (buttonView as ValuableRadioButton<*>).value as Int?
                     }
                 }
                 radioGroup.addView(radio)
@@ -58,5 +59,29 @@ class QuestionAdapter(private val activity: ExamActivity, private val questions:
 
     override fun getCount(): Int {
         return questions.size
+    }
+
+    fun getResult(): Map<Int, Int> {
+        return questions.filter { question ->
+            question.selected != null
+        }.map { question ->
+            Pair(question.id, question.selected!!)
+        }.toMap()
+    }
+
+    fun enableAll() {
+        views.forEach { view ->
+            view?.findViewById<RadioGroup>(R.id.options)?.forEach { radio ->
+                radio.isEnabled = true
+            }
+        }
+    }
+
+    fun disableAll() {
+        views.forEach { view ->
+            view?.findViewById<RadioGroup>(R.id.options)?.forEach { radio ->
+                radio.isEnabled = false
+            }
+        }
     }
 }

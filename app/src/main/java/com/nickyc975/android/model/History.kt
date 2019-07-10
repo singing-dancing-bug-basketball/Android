@@ -10,15 +10,14 @@ class History private constructor(
     time: Int,
     totalScore: Double,
     numQuestions: Int,
-    questions: List<Question>? = null,
     val userScore: Double = 0.0
-): Exam(id, title, deadline, time, totalScore, numQuestions, questions) {
+): Exam(id, title, deadline, time, totalScore, numQuestions) {
     companion object {
         @JvmStatic
         val histories = listOf(
-            History(0, "exam_4", Date(), 120, 100.0, 0, null, 90.0),
-            History(1, "exam_5", Date(), 120, 100.0, 0, null, 85.0),
-            History(2, "exam_6", Date(), 120, 100.0, 0, null, 95.0)
+            History(0, "exam_4", Date(), 120, 100.0, 0, 90.0),
+            History(1, "exam_5", Date(), 120, 100.0, 0, 85.0),
+            History(2, "exam_6", Date(), 120, 100.0, 0, 95.0)
         )
 
         @JvmStatic
