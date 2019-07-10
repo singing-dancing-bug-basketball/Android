@@ -14,8 +14,4 @@ class ExamAdapter(activity: Activity, exams: List<Exam>): BaseExamAdapter(activi
         (view.findViewById(R.id.exam_user_core) as TextView).visibility = View.GONE
         return view
     }
-
-    override suspend fun reload() {
-        exams = Exam.list()
-    }
 }

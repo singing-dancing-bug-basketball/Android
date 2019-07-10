@@ -16,9 +16,4 @@ class HistoryAdapter(activity: Activity, histories: List<History>): BaseExamAdap
         (view.findViewById(R.id.exam_user_core) as TextView).text = activity.getString(R.string.user_score, (exams[position] as History).userScore)
         return view
     }
-
-    override suspend fun reload() {
-        delay(500)
-        exams = History.list()
-    }
 }

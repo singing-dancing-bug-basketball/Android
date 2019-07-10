@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.nickyc975.android.ExamActivity
 import com.nickyc975.android.R
 import com.nickyc975.android.adapter.ExamAdapter
+import com.nickyc975.android.model.Exam
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -73,7 +74,7 @@ class ExamsFragment: ToolbarFragment() {
     private fun doRefresh() {
         examsRefresh.isRefreshing = true
         GlobalScope.launch {
-            examAdapter.reload()
+            examAdapter.exams = Exam.list()
             handler.sendEmptyMessage(0)
         }
     }
