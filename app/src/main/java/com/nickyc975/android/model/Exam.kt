@@ -16,9 +16,9 @@ open class Exam protected constructor(
     companion object {
         @JvmStatic
         val exams = listOf(
-            Exam(1, "exam_1", Date(), 120, 100.0),
-            Exam(2, "exam_2", Date(), 120, 100.0),
-            Exam(3, "exam_3", Date(), 120, 100.0)
+            Exam(1, "exam_1", Date(), 120, 100.0, 5),
+            Exam(2, "exam_2", Date(), 120, 100.0, 5),
+            Exam(3, "exam_3", Date(), 120, 100.0, 5)
         )
 
         @JvmStatic
@@ -31,6 +31,12 @@ open class Exam protected constructor(
         suspend fun get(id: Int): Exam {
             delay(500)
             return exams[id]
+        }
+
+        @JvmStatic
+        suspend fun submit(exam: Exam): Boolean {
+            delay(500)
+            return true
         }
     }
 

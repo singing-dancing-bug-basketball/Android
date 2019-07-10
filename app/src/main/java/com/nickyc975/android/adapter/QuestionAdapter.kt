@@ -30,7 +30,16 @@ class QuestionAdapter(private val activity: ExamActivity, private val questions:
             val view = activity.layoutInflater.inflate(R.layout.question_item, parent, false)
             val radioGroup = view.findViewById<RadioGroup>(R.id.options)
             for ((option, detail) in question.options) {
-                radioGroup.addView(ValuableRadioButton(activity, "$option. $detail", option))
+                val radio = ValuableRadioButton(activity, "$option. $detail", option)
+                radio.setOnCheckedChangeListener { buttonView, isChecked ->
+                    if (isChecked) {
+                        if (question.selected == null) {
+                            activity.onQuestionChecked()
+                        }
+                        question.selected = (buttonView as ValuableRadioButton<*>).value as String
+                    }
+                }
+                radioGroup.addView(radio)
             }
             view.findViewById<TextView>(R.id.question).text = "$position. ${question.title}"
             view.findViewById<TextView>(R.id.answer).visibility = View.GONE
