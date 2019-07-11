@@ -1,6 +1,5 @@
 package com.nickyc975.android.model
 
-import kotlinx.coroutines.delay
 import org.json.JSONObject
 import java.io.Serializable
 

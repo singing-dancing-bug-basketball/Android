@@ -14,6 +14,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class HistoryActivity : AppCompatActivity() {
+    lateinit var failReason: FailReason
     private lateinit var history: History
     private lateinit var questionList: ListView
     private lateinit var questionAdapter: HistoryQuestionAdapter
@@ -37,7 +38,12 @@ class HistoryActivity : AppCompatActivity() {
                 questionAdapter = HistoryQuestionAdapter(this@HistoryActivity, history.questions)
                 handler.sendEmptyMessage(0)
             } else {
-                Toast.makeText(this@HistoryActivity, R.string.network_error, Toast.LENGTH_SHORT).show()
+                val messageId = when (failReason) {
+                    FailReason.NETWORK_ERROR -> R.string.network_error
+                    FailReason.USER_NOT_LOGEDIN -> R.string.network_error
+                    else -> R.string.unknown_error
+                }
+                Toast.makeText(this@HistoryActivity, messageId, Toast.LENGTH_SHORT).show()
             }
         }
     }

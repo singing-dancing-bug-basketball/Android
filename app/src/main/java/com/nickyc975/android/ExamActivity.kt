@@ -16,6 +16,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class ExamActivity : AppCompatActivity() {
+    lateinit var failReason: FailReason
     private lateinit var exam: Exam
     private lateinit var timeLeft: TextView
     private lateinit var questionLeft: TextView
@@ -112,7 +113,12 @@ class ExamActivity : AppCompatActivity() {
                     questionAdapter = ExamQuestionAdapter(this@ExamActivity, exam.questions)
                     startHandler.sendEmptyMessage(0)
                 } else {
-                    Toast.makeText(this@ExamActivity, R.string.network_error, Toast.LENGTH_SHORT).show()
+                    val messageId = when (failReason) {
+                        FailReason.NETWORK_ERROR -> R.string.network_error
+                        FailReason.USER_NOT_LOGEDIN -> R.string.network_error
+                        else -> R.string.unknown_error
+                    }
+                    Toast.makeText(this@ExamActivity, messageId, Toast.LENGTH_SHORT).show()
                 }
             }
         }

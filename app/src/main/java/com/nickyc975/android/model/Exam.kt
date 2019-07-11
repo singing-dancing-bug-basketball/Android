@@ -1,6 +1,8 @@
 package com.nickyc975.android.model
 
 import android.content.Context
+import com.nickyc975.android.ExamActivity
+import com.nickyc975.android.FailReason
 import com.nickyc975.android.R
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -24,9 +26,11 @@ open class Exam protected constructor(
         @JvmStatic
         suspend fun list(context: Context): List<Exam> {
             if (!User.isLogedin(context)) {
+                (context as ExamActivity).failReason = FailReason.USER_NOT_LOGEDIN
                 return listOf()
             }
 
+            val exams = ArrayList<Exam>()
             val user = AppDatabase.getDatabase(context)?.userDao()?.current()
             val request = Request.Builder()
                 .header("Cookie", user!!.cookie)
@@ -37,22 +41,23 @@ open class Exam protected constructor(
                 .build()
 
             try {
-                val exams = ArrayList<Exam>()
                 val response = client.newCall(request).execute()
                 val result = JSONObject(response.body()?.string())
                 val JSONExams = result.getJSONArray("tests")
                 for (i in 0 until  JSONExams.length()) {
                     exams.add(parse(JSONExams.getJSONObject(i)))
                 }
-                return exams
             } catch (e: Exception) {
-                return listOf()
+                (context as ExamActivity).failReason = FailReason.NETWORK_ERROR
             }
+
+            return exams
         }
 
         @JvmStatic
         suspend fun get(context: Context, old: Exam): Exam {
             if (!User.isLogedin(context)) {
+                (context as ExamActivity).failReason = FailReason.USER_NOT_LOGEDIN
                 return old
             }
 
@@ -75,7 +80,7 @@ open class Exam protected constructor(
                 }
                 old.questions = questions
             } catch (e: Exception) {
-
+                (context as ExamActivity).failReason = FailReason.NETWORK_ERROR
             }
 
             return old
@@ -84,6 +89,7 @@ open class Exam protected constructor(
         @JvmStatic
         suspend fun submit(context: Context, examId: Int, result: Map<Int, Int>): Boolean {
             if (!User.isLogedin(context)) {
+                (context as ExamActivity).failReason = FailReason.USER_NOT_LOGEDIN
                 return false
             }
 
@@ -100,8 +106,6 @@ open class Exam protected constructor(
             json.put("test_id", examId)
             json.put("selections", array)
 
-            println(json)
-
             val body = RequestBody.create(JSON, json.toString())
             val request = Request.Builder()
                 .header("Cookie", user!!.cookie)
@@ -116,10 +120,11 @@ open class Exam protected constructor(
                 if (response.getInt("status") == 200) {
                     return true
                 }
-                return false
             } catch (e: Exception) {
-                return false
+                (context as ExamActivity).failReason = FailReason.NETWORK_ERROR
             }
+
+            return false
         }
 
         @JvmStatic

@@ -1,6 +1,8 @@
 package com.nickyc975.android.model
 
 import android.content.Context
+import com.nickyc975.android.FailReason
+import com.nickyc975.android.HistoryActivity
 import com.nickyc975.android.R
 import okhttp3.Request
 import org.json.JSONObject
@@ -21,9 +23,11 @@ class History private constructor(
         @JvmStatic
         suspend fun list(context: Context): List<History> {
             if (!User.isLogedin(context)) {
+                (context as HistoryActivity).failReason = FailReason.USER_NOT_LOGEDIN
                 return listOf()
             }
 
+            val histories = ArrayList<History>()
             val user = AppDatabase.getDatabase(context)?.userDao()?.current()
             val request = Request.Builder()
                 .header("Cookie", user!!.cookie)
@@ -34,22 +38,23 @@ class History private constructor(
                 .build()
 
             try {
-                val histories = ArrayList<History>()
                 val response = client.newCall(request).execute()
                 val result = JSONObject(response.body()?.string())
                 val JSONHistories = result.getJSONArray("tests")
                 for (i in 0 until  JSONHistories.length()) {
                     histories.add(parse(JSONHistories.getJSONObject(i)))
                 }
-                return histories
             } catch (e: Exception) {
-                return listOf()
+                (context as HistoryActivity).failReason = FailReason.NETWORK_ERROR
             }
+
+            return histories
         }
 
         @JvmStatic
         suspend fun get(context: Context, old: History): History {
             if (!User.isLogedin(context)) {
+                (context as HistoryActivity).failReason = FailReason.USER_NOT_LOGEDIN
                 return old
             }
 
@@ -72,7 +77,7 @@ class History private constructor(
                 }
                 old.questions = questions
             } catch (e: Exception) {
-
+                (context as HistoryActivity).failReason = FailReason.NETWORK_ERROR
             }
 
             return old
