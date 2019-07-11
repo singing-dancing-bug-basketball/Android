@@ -8,7 +8,7 @@ import android.os.Message
 import android.text.format.DateUtils
 import android.view.View
 import android.widget.*
-import com.nickyc975.android.adapter.QuestionAdapter
+import com.nickyc975.android.adapter.ExamQuestionAdapter
 import com.nickyc975.android.model.Exam
 import com.nickyc975.android.model.Question
 import kotlinx.coroutines.GlobalScope
@@ -22,7 +22,7 @@ class ExamActivity : AppCompatActivity() {
     private lateinit var questionLeft: TextView
     private lateinit var questionList: ListView
     private lateinit var timer: Job
-    private lateinit var questionAdapter: QuestionAdapter
+    private lateinit var questionAdapter: ExamQuestionAdapter
 
     private var started = false
     private var submitted = false
@@ -109,7 +109,7 @@ class ExamActivity : AppCompatActivity() {
             button.isEnabled = false
             GlobalScope.launch {
                 exam = Exam.get(exam.id)
-                questionAdapter = QuestionAdapter(this@ExamActivity, Question.list(exam.id))
+                questionAdapter = ExamQuestionAdapter(this@ExamActivity, Question.list(exam.id))
                 startHandler.sendEmptyMessage(0)
             }
         }

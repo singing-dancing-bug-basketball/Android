@@ -2,13 +2,41 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".HistoryActivity">
 
-    <androidx.appcompat.widget.Toolbar
+    <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:id="@+id/history_info_bar"/>
+            android:padding="10dp"
+            android:background="@color/colorBackground"
+            android:id="@+id/history_info_bar">
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:id="@+id/question_correct"
+                android:gravity="start"
+                android:textSize="24sp"/>
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:id="@+id/total_score"
+                android:gravity="end"
+                android:textSize="24sp"/>
+
+    </LinearLayout>
+
+    <ListView
+            android:id="@+id/question_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+    </ListView>
 </LinearLayout>

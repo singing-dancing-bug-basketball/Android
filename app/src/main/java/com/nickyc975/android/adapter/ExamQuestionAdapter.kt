@@ -10,7 +10,7 @@ import com.nickyc975.android.ExamActivity
 import com.nickyc975.android.R
 import com.nickyc975.android.model.Question
 
-class QuestionAdapter(private val activity: ExamActivity, private val questions: List<Question>): BaseAdapter() {
+class ExamQuestionAdapter(private val activity: ExamActivity, private val questions: List<Question>): BaseAdapter() {
     companion object {
         class ValuableRadioButton<T>(context: Context): RadioButton(context) {
             var value: T? = null

@@ -13,11 +13,11 @@ class Question private constructor(
     companion object {
         @JvmStatic
         val questions = listOf(
-            Question(1, "question_1", null, null, mapOf(1 to "123", 2 to "124", 3 to "125", 4 to "126")),
-            Question(2, "question_2", null, null, mapOf(1 to "123", 2 to "124", 3 to "125", 4 to "126")),
-            Question(3, "question_3", null, null, mapOf(1 to "123", 2 to "124", 3 to "125", 4 to "126")),
-            Question(4, "question_4", null, null, mapOf(1 to "123", 2 to "124", 3 to "125", 4 to "126")),
-            Question(5, "question_5", null, null, mapOf(1 to "123", 2 to "124", 3 to "125", 4 to "126"))
+            Question(1, "question_1", 1, 2, mapOf(1 to "123", 2 to "124", 3 to "125", 4 to "126")),
+            Question(2, "question_2", 2, 1, mapOf(1 to "123", 2 to "124", 3 to "125", 4 to "126")),
+            Question(3, "question_3", 3, 3, mapOf(1 to "123", 2 to "124", 3 to "125", 4 to "126")),
+            Question(4, "question_4", 4, 4, mapOf(1 to "123", 2 to "124", 3 to "125", 4 to "126")),
+            Question(5, "question_5", 1, 4, mapOf(1 to "123", 2 to "124", 3 to "125", 4 to "126"))
         )
 
         @JvmStatic
