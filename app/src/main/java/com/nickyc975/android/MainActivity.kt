@@ -98,9 +98,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     database = AppDatabase.getDatabase(this@MainActivity)
                     if (User.isLogedin(this@MainActivity)) {
                         user = database?.userDao()?.current()
-                    } else {
-                        user = User("123456789", "askkdfaskjdhnflkalskdj")
-                        database?.userDao()?.insert(user!!)
                     }
                     currentFragment.requireRefresh()
                     return null
@@ -162,7 +159,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 User.logout(this@MainActivity)
                 return null
             }
-        }
+        }.execute()
 
         user = null
         userIdTextView?.text = ""

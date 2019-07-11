@@ -10,7 +10,6 @@ import android.view.View
 import android.widget.*
 import com.nickyc975.android.adapter.ExamQuestionAdapter
 import com.nickyc975.android.model.Exam
-import com.nickyc975.android.model.Question
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
@@ -108,9 +107,11 @@ class ExamActivity : AppCompatActivity() {
         findViewById<Button>(R.id.start_exam_button).setOnClickListener { button ->
             button.isEnabled = false
             GlobalScope.launch {
-                exam = Exam.get(exam.id)
-                questionAdapter = ExamQuestionAdapter(this@ExamActivity, Question.list(exam.id))
-                startHandler.sendEmptyMessage(0)
+                exam = Exam.get(this@ExamActivity, exam)
+                if (!exam.questions.isEmpty()) {
+                    questionAdapter = ExamQuestionAdapter(this@ExamActivity, exam.questions)
+                    startHandler.sendEmptyMessage(0)
+                }
             }
         }
     }
@@ -144,7 +145,7 @@ class ExamActivity : AppCompatActivity() {
         questionAdapter.disableAll()
         findViewById<Button>(R.id.submit_button).isEnabled = false
         GlobalScope.launch {
-            Exam.submit(exam.id, questionAdapter.getResult())
+            Exam.submit(this@ExamActivity, exam.id, questionAdapter.getResult())
             submitHandler.sendEmptyMessage(0)
         }
     }

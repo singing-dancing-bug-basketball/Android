@@ -10,8 +10,9 @@ class History private constructor(
     time: Int,
     totalScore: Double,
     numQuestions: Int,
-    val userScore: Double = 0.0
-): Exam(id, title, deadline, time, totalScore, numQuestions) {
+    val userScore: Double = 0.0,
+    questions: List<Question> = listOf()
+): Exam(id, title, deadline, time, totalScore, numQuestions, questions) {
     companion object {
         @JvmStatic
         val histories = listOf(

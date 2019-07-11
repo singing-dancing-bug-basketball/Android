@@ -74,7 +74,7 @@ class ExamsFragment: ToolbarFragment() {
     private fun doRefresh() {
         examsRefresh.isRefreshing = true
         GlobalScope.launch {
-            examAdapter.exams = Exam.list()
+            examAdapter.exams = Exam.list(this@ExamsFragment.context!!)
             handler.sendEmptyMessage(0)
         }
     }

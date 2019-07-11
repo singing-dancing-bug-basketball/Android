@@ -32,7 +32,7 @@ class User(): Model(), Serializable {
                 val response = client.newCall(request).execute()
                 val result = JSONObject(response.body()?.string())
                 if (result.getInt("status") == 200) {
-                    val cookie = result.getString("cookie")
+                    val cookie = response.header("Set-Cookie")
                     if(cookie != null) {
                         val user = User(id, cookie)
                         AppDatabase.getDatabase(context)?.userDao()?.insert(user)
