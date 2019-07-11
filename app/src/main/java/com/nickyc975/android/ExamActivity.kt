@@ -108,9 +108,11 @@ class ExamActivity : AppCompatActivity() {
             button.isEnabled = false
             GlobalScope.launch {
                 exam = Exam.get(this@ExamActivity, exam)
-                if (!exam.questions.isEmpty()) {
+                if (exam.questions.isNotEmpty()) {
                     questionAdapter = ExamQuestionAdapter(this@ExamActivity, exam.questions)
                     startHandler.sendEmptyMessage(0)
+                } else {
+                    Toast.makeText(this@ExamActivity, R.string.network_error, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -145,8 +147,11 @@ class ExamActivity : AppCompatActivity() {
         questionAdapter.disableAll()
         findViewById<Button>(R.id.submit_button).isEnabled = false
         GlobalScope.launch {
-            Exam.submit(this@ExamActivity, exam.id, questionAdapter.getResult())
-            submitHandler.sendEmptyMessage(0)
+            if (Exam.submit(this@ExamActivity, exam.id, questionAdapter.getResult())) {
+                submitHandler.sendEmptyMessage(0)
+            } else {
+                Toast.makeText(this@ExamActivity, R.string.network_error, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

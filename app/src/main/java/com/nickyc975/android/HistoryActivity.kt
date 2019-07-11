@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Message
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.Toast
 import com.nickyc975.android.adapter.HistoryQuestionAdapter
 import com.nickyc975.android.model.History
 import com.nickyc975.android.model.Question
@@ -33,8 +34,12 @@ class HistoryActivity : AppCompatActivity() {
         history = intent.getSerializableExtra("history") as History
         GlobalScope.launch {
             history = History.get(this@HistoryActivity, history)
-            questionAdapter = HistoryQuestionAdapter(this@HistoryActivity, history.questions)
-            handler.sendEmptyMessage(0)
+            if (history.questions.isNotEmpty()) {
+                questionAdapter = HistoryQuestionAdapter(this@HistoryActivity, history.questions)
+                handler.sendEmptyMessage(0)
+            } else {
+                Toast.makeText(this@HistoryActivity, R.string.network_error, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
