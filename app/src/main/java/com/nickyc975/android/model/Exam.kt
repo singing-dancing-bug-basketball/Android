@@ -65,8 +65,6 @@ open class Exam protected constructor(
                 .get()
                 .build()
 
-            println(request.url().toString())
-
             try {
                 val questions = ArrayList<Question>()
                 val response = client.newCall(request).execute()
@@ -101,6 +99,8 @@ open class Exam protected constructor(
             json.put("student_id", user?.id)
             json.put("test_id", examId)
             json.put("selections", array)
+
+            println(json)
 
             val body = RequestBody.create(JSON, json.toString())
             val request = Request.Builder()

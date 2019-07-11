@@ -1,6 +1,10 @@
 package com.nickyc975.android.model
 
-import kotlinx.coroutines.delay
+import android.content.Context
+import com.nickyc975.android.R
+import okhttp3.Request
+import org.json.JSONObject
+import java.lang.Exception
 import java.util.*
 
 class History private constructor(
@@ -15,21 +19,76 @@ class History private constructor(
 ): Exam(id, title, deadline, time, totalScore, numQuestions, questions) {
     companion object {
         @JvmStatic
-        val histories = listOf(
-            History(0, "exam_4", Date(), 120, 100.0, 0, 90.0),
-            History(1, "exam_5", Date(), 120, 100.0, 0, 85.0),
-            History(2, "exam_6", Date(), 120, 100.0, 0, 95.0)
-        )
+        suspend fun list(context: Context): List<History> {
+            if (!User.isLogedin(context)) {
+                return listOf()
+            }
 
-        @JvmStatic
-        suspend fun list(): List<History> {
-            delay(500)
-            return histories
+            val user = AppDatabase.getDatabase(context)?.userDao()?.current()
+            val request = Request.Builder()
+                .header("Cookie", user!!.cookie)
+                .url(
+                    context.getString(R.string.base_url, context.getString(R.string.history_list_url, user.id))
+                )
+                .get()
+                .build()
+
+            try {
+                val histories = ArrayList<History>()
+                val response = client.newCall(request).execute()
+                val result = JSONObject(response.body()?.string())
+                val JSONHistories = result.getJSONArray("tests")
+                for (i in 0 until  JSONHistories.length()) {
+                    histories.add(parse(JSONHistories.getJSONObject(i)))
+                }
+                return histories
+            } catch (e: Exception) {
+                return listOf()
+            }
         }
 
-        suspend fun get(id: Int): History {
-            delay(500)
-            return histories[id]
+        @JvmStatic
+        suspend fun get(context: Context, old: History): History {
+            if (!User.isLogedin(context)) {
+                return old
+            }
+
+            val user = AppDatabase.getDatabase(context)?.userDao()?.current()
+            val request = Request.Builder()
+                .header("Cookie", user!!.cookie)
+                .url(
+                    context.getString(R.string.base_url, context.getString(R.string.history_url, "${user.id}/${old.id}"))
+                )
+                .get()
+                .build()
+
+            try {
+                val questions = ArrayList<Question>()
+                val response = client.newCall(request).execute()
+                val result = JSONObject(response.body()?.string())
+                val JSONQuestions = result.getJSONArray("questions")
+                for (i in 0 until JSONQuestions.length()) {
+                    questions.add(Question.parse(JSONQuestions.getJSONObject(i)))
+                }
+                old.questions = questions
+            } catch (e: Exception) {
+
+            }
+
+            return old
+        }
+
+        @JvmStatic
+        fun parse(JSONHistory: JSONObject): History {
+            return History(
+                JSONHistory.getInt("test_id"),
+                JSONHistory.getString("title"),
+                Date(JSONHistory.getLong("end_time")),
+                JSONHistory.getInt("duration"),
+                JSONHistory.getDouble("total_score"),
+                JSONHistory.getInt("num_questions"),
+                JSONHistory.getDouble("user_score")
+            )
         }
     }
 }

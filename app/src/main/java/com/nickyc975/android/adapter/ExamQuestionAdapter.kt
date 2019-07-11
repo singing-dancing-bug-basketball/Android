@@ -42,7 +42,7 @@ class ExamQuestionAdapter(private val activity: ExamActivity, private val questi
                 }
                 radioGroup.addView(radio)
             }
-            view.findViewById<TextView>(R.id.question).text = "$position. ${question.title}"
+            view.findViewById<TextView>(R.id.question).text = "$position. ${question.title} (${question.score}分)"
             view.findViewById<TextView>(R.id.answer).visibility = View.GONE
             views[position] = view
         }

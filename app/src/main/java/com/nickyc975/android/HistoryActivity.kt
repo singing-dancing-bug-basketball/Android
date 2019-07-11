@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.widget.ListView
+import android.widget.TextView
 import com.nickyc975.android.adapter.HistoryQuestionAdapter
 import com.nickyc975.android.model.History
 import com.nickyc975.android.model.Question
@@ -31,12 +32,22 @@ class HistoryActivity : AppCompatActivity() {
         questionList = findViewById(R.id.question_list)
         history = intent.getSerializableExtra("history") as History
         GlobalScope.launch {
-            questionAdapter = HistoryQuestionAdapter(this@HistoryActivity, Question.list(history.id))
+            history = History.get(this@HistoryActivity, history)
+            questionAdapter = HistoryQuestionAdapter(this@HistoryActivity, history.questions)
             handler.sendEmptyMessage(0)
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun onLoaded() {
         questionList.adapter = questionAdapter
+        var correctCount = 0
+        for (question in history.questions) {
+            if (question.selected == question.answer) {
+                correctCount++
+            }
+        }
+        findViewById<TextView>(R.id.question_correct).text = "$correctCount/${history.questions.size}"
+        findViewById<TextView>(R.id.total_score).text = "${history.userScore}/${history.totalScore}"
     }
 }

@@ -39,7 +39,9 @@ class Question private constructor(
             return Question(
                 JSONQuestion.getInt("question_id"),
                 JSONQuestion.getString("stem"),
-                JSONQuestion.getInt("score"), null, null,
+                JSONQuestion.getInt("score"),
+                JSONQuestion.optInt("answer"),
+                JSONQuestion.optInt("selection"),
                 options
             )
         }

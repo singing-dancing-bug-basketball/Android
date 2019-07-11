@@ -29,7 +29,7 @@ class HistoryQuestionAdapter(private val activity: HistoryActivity, private val 
                 }
                 radioGroup.addView(radio)
             }
-            view.findViewById<TextView>(R.id.question).text = "$position. ${question.title}"
+            view.findViewById<TextView>(R.id.question).text = "$position. ${question.title} (${question.score}分)"
             view.findViewById<TextView>(R.id.answer).text = "${question.answer}. ${question.options[question.answer!!]}"
             views[position] = view
         }

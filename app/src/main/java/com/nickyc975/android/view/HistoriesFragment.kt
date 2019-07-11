@@ -74,7 +74,7 @@ class HistoriesFragment: ToolbarFragment() {
     private fun doRefresh() {
         historiesRefresh.isRefreshing = true
         GlobalScope.launch {
-            historyAdapter.exams = History.list()
+            historyAdapter.exams = History.list(this@HistoriesFragment.context!!)
             handler.sendEmptyMessage(0)
         }
     }
