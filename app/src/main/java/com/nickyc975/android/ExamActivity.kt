@@ -1,13 +1,13 @@
 package com.nickyc975.android
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.text.format.DateUtils
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import com.nickyc975.android.adapter.ExamQuestionAdapter
 import com.nickyc975.android.model.Exam
 import kotlinx.coroutines.GlobalScope
@@ -15,8 +15,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-class ExamActivity : AppCompatActivity() {
-    lateinit var failReason: FailReason
+class ExamActivity : AppCompatActivity(), FailHandler {
+    override val failMessageHandler = FailHandler.Companion.FailMessageHandler(this)
+
     private lateinit var exam: Exam
     private lateinit var timeLeft: TextView
     private lateinit var questionLeft: TextView
@@ -30,7 +31,7 @@ class ExamActivity : AppCompatActivity() {
     private var numQuestionLeft: Int = 0
 
     private val startHandler = @SuppressLint("HandlerLeak")
-    object: Handler() {
+    object : Handler() {
         override fun handleMessage(msg: Message?) {
             super.handleMessage(msg)
             startExam()
@@ -38,7 +39,7 @@ class ExamActivity : AppCompatActivity() {
     }
 
     private val countDownHandler = @SuppressLint("HandlerLeak")
-    object: Handler() {
+    object : Handler() {
         override fun handleMessage(msg: Message?) {
             super.handleMessage(msg)
             onTimeCountDown()
@@ -46,7 +47,7 @@ class ExamActivity : AppCompatActivity() {
     }
 
     private val submitHandler = @SuppressLint("HandlerLeak")
-    object: Handler() {
+    object : Handler() {
         override fun handleMessage(msg: Message?) {
             super.handleMessage(msg)
             postSubmitExam()
@@ -112,13 +113,6 @@ class ExamActivity : AppCompatActivity() {
                 if (exam.questions.isNotEmpty()) {
                     questionAdapter = ExamQuestionAdapter(this@ExamActivity, exam.questions)
                     startHandler.sendEmptyMessage(0)
-                } else {
-                    val messageId = when (failReason) {
-                        FailReason.NETWORK_ERROR -> R.string.network_error
-                        FailReason.USER_NOT_LOGEDIN -> R.string.network_error
-                        else -> R.string.unknown_error
-                    }
-                    Toast.makeText(this@ExamActivity, messageId, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -127,7 +121,8 @@ class ExamActivity : AppCompatActivity() {
     private fun startExam() {
         findViewById<View>(R.id.start_exam_frame).visibility = View.GONE
         val submitFrame = this.layoutInflater.inflate(
-            R.layout.submit_button, questionList, false) as LinearLayout
+            R.layout.submit_button, questionList, false
+        ) as LinearLayout
         questionList.addFooterView(submitFrame)
         questionList.adapter = questionAdapter
         questionList.visibility = View.VISIBLE
@@ -155,8 +150,6 @@ class ExamActivity : AppCompatActivity() {
         GlobalScope.launch {
             if (Exam.submit(this@ExamActivity, exam.id, questionAdapter.getResult())) {
                 submitHandler.sendEmptyMessage(0)
-            } else {
-                Toast.makeText(this@ExamActivity, R.string.network_error, Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -1,15 +1,14 @@
 package com.nickyc975.android.model
 
 import android.content.Context
-import com.nickyc975.android.ExamActivity
-import com.nickyc975.android.FailReason
+import com.nickyc975.android.FailHandler
+import com.nickyc975.android.FailHandler.Companion.FailReason
 import com.nickyc975.android.R
 import okhttp3.Request
 import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.Serializable
-import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -26,7 +25,7 @@ open class Exam protected constructor(
         @JvmStatic
         suspend fun list(context: Context): List<Exam> {
             if (!User.isLogedin(context)) {
-                (context as ExamActivity).failReason = FailReason.USER_NOT_LOGEDIN
+                (context as FailHandler).onFail(FailReason.USER_NOT_LOGEDIN)
                 return listOf()
             }
 
@@ -44,11 +43,11 @@ open class Exam protected constructor(
                 val response = client.newCall(request).execute()
                 val result = JSONObject(response.body()?.string())
                 val JSONExams = result.getJSONArray("tests")
-                for (i in 0 until  JSONExams.length()) {
+                for (i in 0 until JSONExams.length()) {
                     exams.add(parse(JSONExams.getJSONObject(i)))
                 }
             } catch (e: Exception) {
-                (context as ExamActivity).failReason = FailReason.NETWORK_ERROR
+                (context as FailHandler).onFail(FailReason.NETWORK_ERROR)
             }
 
             return exams
@@ -57,7 +56,7 @@ open class Exam protected constructor(
         @JvmStatic
         suspend fun get(context: Context, old: Exam): Exam {
             if (!User.isLogedin(context)) {
-                (context as ExamActivity).failReason = FailReason.USER_NOT_LOGEDIN
+                (context as FailHandler).onFail(FailReason.USER_NOT_LOGEDIN)
                 return old
             }
 
@@ -80,7 +79,7 @@ open class Exam protected constructor(
                 }
                 old.questions = questions
             } catch (e: Exception) {
-                (context as ExamActivity).failReason = FailReason.NETWORK_ERROR
+                (context as FailHandler).onFail(FailReason.NETWORK_ERROR)
             }
 
             return old
@@ -89,7 +88,7 @@ open class Exam protected constructor(
         @JvmStatic
         suspend fun submit(context: Context, examId: Int, result: Map<Int, Int>): Boolean {
             if (!User.isLogedin(context)) {
-                (context as ExamActivity).failReason = FailReason.USER_NOT_LOGEDIN
+                (context as FailHandler).onFail(FailReason.USER_NOT_LOGEDIN)
                 return false
             }
 
@@ -121,7 +120,7 @@ open class Exam protected constructor(
                     return true
                 }
             } catch (e: Exception) {
-                (context as ExamActivity).failReason = FailReason.NETWORK_ERROR
+                (context as FailHandler).onFail(FailReason.NETWORK_ERROR)
             }
 
             return false

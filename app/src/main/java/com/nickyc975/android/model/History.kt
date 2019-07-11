@@ -1,12 +1,11 @@
 package com.nickyc975.android.model
 
 import android.content.Context
-import com.nickyc975.android.FailReason
-import com.nickyc975.android.HistoryActivity
+import com.nickyc975.android.FailHandler
+import com.nickyc975.android.FailHandler.Companion.FailReason
 import com.nickyc975.android.R
 import okhttp3.Request
 import org.json.JSONObject
-import java.lang.Exception
 import java.util.*
 
 class History private constructor(
@@ -18,12 +17,12 @@ class History private constructor(
     numQuestions: Int,
     val userScore: Double = 0.0,
     questions: List<Question> = listOf()
-): Exam(id, title, deadline, time, totalScore, numQuestions, questions) {
+) : Exam(id, title, deadline, time, totalScore, numQuestions, questions) {
     companion object {
         @JvmStatic
         suspend fun list(context: Context): List<History> {
             if (!User.isLogedin(context)) {
-                (context as HistoryActivity).failReason = FailReason.USER_NOT_LOGEDIN
+                (context as FailHandler).onFail(FailReason.USER_NOT_LOGEDIN)
                 return listOf()
             }
 
@@ -41,11 +40,11 @@ class History private constructor(
                 val response = client.newCall(request).execute()
                 val result = JSONObject(response.body()?.string())
                 val JSONHistories = result.getJSONArray("tests")
-                for (i in 0 until  JSONHistories.length()) {
+                for (i in 0 until JSONHistories.length()) {
                     histories.add(parse(JSONHistories.getJSONObject(i)))
                 }
             } catch (e: Exception) {
-                (context as HistoryActivity).failReason = FailReason.NETWORK_ERROR
+                (context as FailHandler).onFail(FailReason.NETWORK_ERROR)
             }
 
             return histories
@@ -54,7 +53,7 @@ class History private constructor(
         @JvmStatic
         suspend fun get(context: Context, old: History): History {
             if (!User.isLogedin(context)) {
-                (context as HistoryActivity).failReason = FailReason.USER_NOT_LOGEDIN
+                (context as FailHandler).onFail(FailReason.USER_NOT_LOGEDIN)
                 return old
             }
 
@@ -62,7 +61,10 @@ class History private constructor(
             val request = Request.Builder()
                 .header("Cookie", user!!.cookie)
                 .url(
-                    context.getString(R.string.base_url, context.getString(R.string.history_url, "${user.id}/${old.id}"))
+                    context.getString(
+                        R.string.base_url,
+                        context.getString(R.string.history_url, "${user.id}/${old.id}")
+                    )
                 )
                 .get()
                 .build()
@@ -77,7 +79,7 @@ class History private constructor(
                 }
                 old.questions = questions
             } catch (e: Exception) {
-                (context as HistoryActivity).failReason = FailReason.NETWORK_ERROR
+                (context as FailHandler).onFail(FailReason.NETWORK_ERROR)
             }
 
             return old

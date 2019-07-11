@@ -19,7 +19,7 @@ import com.nickyc975.android.model.History
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class HistoriesFragment: ToolbarFragment() {
+class HistoriesFragment : ToolbarFragment() {
     private var needRefresh = false
     private lateinit var handler: Handler
     private lateinit var historyList: ListView
@@ -40,7 +40,7 @@ class HistoriesFragment: ToolbarFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         handler = @SuppressLint("HandlerLeak")
-        object: Handler() {
+        object : Handler() {
             override fun handleMessage(msg: Message) {
                 historyAdapter.notifyDataSetChanged()
                 historiesRefresh.isRefreshing = false
@@ -56,7 +56,7 @@ class HistoriesFragment: ToolbarFragment() {
         historiesRefresh = view.findViewById(R.id.histories_refresh)
         historyAdapter = HistoryAdapter(activity as Activity, listOf())
         historyList.adapter = historyAdapter
-        historiesRefresh.setOnRefreshListener {  }
+        historiesRefresh.setOnRefreshListener { }
         historyList.onItemClickListener = listener
         requireRefresh()
     }

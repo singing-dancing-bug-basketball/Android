@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.nickyc975.android.R
 
-class AboutFragment: ToolbarFragment() {
+class AboutFragment : ToolbarFragment() {
     override fun requireRefresh() {
 
     }

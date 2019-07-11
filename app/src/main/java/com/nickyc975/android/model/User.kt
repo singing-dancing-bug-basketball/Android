@@ -3,17 +3,16 @@ package com.nickyc975.android.model
 import android.content.Context
 import android.util.Log
 import androidx.room.*
-import com.nickyc975.android.LoginActivity
+import com.nickyc975.android.FailHandler
+import com.nickyc975.android.FailHandler.Companion.FailReason
+import com.nickyc975.android.R
 import okhttp3.Request
 import okhttp3.RequestBody
 import org.json.JSONObject
-import com.nickyc975.android.R
-import com.nickyc975.android.FailReason
 import java.io.Serializable
-import java.lang.Exception
 
 @Entity
-class User(): Model(), Serializable {
+class User() : Model(), Serializable {
     companion object {
         @JvmStatic
         private val LOG_TAG = "UserModel"
@@ -33,16 +32,16 @@ class User(): Model(), Serializable {
                 val result = JSONObject(response.body()?.string())
                 if (result.getInt("status") == 200) {
                     val cookie = response.header("Set-Cookie")
-                    if(cookie != null) {
+                    if (cookie != null) {
                         val user = User(id, cookie)
                         AppDatabase.getDatabase(context)?.userDao()?.insert(user)
                         return user
                     }
                 }
-                (context as LoginActivity).failedReason = FailReason.USERNAME_PASSWORD_ERROR
+                (context as FailHandler).onFail(FailReason.USERNAME_PASSWORD_ERROR)
             } catch (e: Exception) {
                 Log.e(LOG_TAG, e.message)
-                (context as LoginActivity).failedReason = FailReason.NETWORK_ERROR
+                (context as FailHandler).onFail(FailReason.NETWORK_ERROR)
             }
 
             return null
@@ -68,7 +67,7 @@ class User(): Model(), Serializable {
     @ColumnInfo
     lateinit var cookie: String
 
-    constructor(id: String, cookie: String): this() {
+    constructor(id: String, cookie: String) : this() {
         this.id = id
         this.cookie = cookie
     }

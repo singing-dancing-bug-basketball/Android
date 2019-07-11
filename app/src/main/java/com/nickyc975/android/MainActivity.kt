@@ -4,28 +4,30 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.forEach
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.nickyc975.android.model.AppDatabase
+import com.nickyc975.android.model.User
 import com.nickyc975.android.view.AboutFragment
 import com.nickyc975.android.view.ExamsFragment
 import com.nickyc975.android.view.HistoriesFragment
 import com.nickyc975.android.view.ToolbarFragment
-import com.nickyc975.android.model.User
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), FailHandler, NavigationView.OnNavigationItemSelectedListener {
     companion object {
         @JvmStatic
         val REQUEST_LOGIN = 0
     }
+
+    override val failMessageHandler = FailHandler.Companion.FailMessageHandler(this)
 
     lateinit var drawer: DrawerLayout
     private lateinit var navigation: NavigationView
@@ -37,7 +39,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var userIdTextView: TextView? = null
     private var loginLogoutButton: Button? = null
 
-    private var drawerListener = object: DrawerLayout.DrawerListener {
+    private var drawerListener = object : DrawerLayout.DrawerListener {
         override fun onDrawerStateChanged(newState: Int) {
 
         }
@@ -93,7 +95,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             navigation.menu.findItem(R.id.exams).isChecked = true
             setCurrentFragment(ExamsFragment())
 
-            object: AsyncTask<Void, Void, Void?>() {
+            object : AsyncTask<Void, Void, Void?>() {
                 override fun doInBackground(vararg params: Void?): Void? {
                     database = AppDatabase.getDatabase(this@MainActivity)
                     if (User.isLogedin(this@MainActivity)) {
@@ -154,7 +156,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     @SuppressLint("StaticFieldLeak")
     private fun logout() {
-        object: AsyncTask<Void, Void, Void?>() {
+        object : AsyncTask<Void, Void, Void?>() {
             override fun doInBackground(vararg params: Void?): Void? {
                 User.logout(this@MainActivity)
                 return null

@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.nickyc975.android.MainActivity
 import com.nickyc975.android.R
 
-abstract class ToolbarFragment: Fragment() {
+abstract class ToolbarFragment : Fragment() {
     open lateinit var toolbar: Toolbar
 
     abstract fun requireRefresh()

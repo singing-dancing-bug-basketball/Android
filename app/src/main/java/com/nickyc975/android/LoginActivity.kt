@@ -3,16 +3,17 @@ package com.nickyc975.android
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.AsyncTask
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.nickyc975.android.model.User
 
-class LoginActivity : AppCompatActivity() {
-    lateinit var failedReason: FailReason
+class LoginActivity : AppCompatActivity(), FailHandler {
+    override val failMessageHandler = FailHandler.Companion.FailMessageHandler(this)
+
     private lateinit var username: TextView
     private lateinit var password: TextView
     private lateinit var loginButton: Button
@@ -48,18 +49,11 @@ class LoginActivity : AppCompatActivity() {
             intent.putExtra("user", user)
             setResult(MainActivity.REQUEST_LOGIN, intent)
             finish()
-        } else {
-            val messageId = when (failedReason) {
-                FailReason.NETWORK_ERROR -> R.string.network_error
-                FailReason.USERNAME_PASSWORD_ERROR -> R.string.invalid_username_password
-                else -> R.string.unknown_error
-            }
-            Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show()
         }
     }
 
     @SuppressLint("StaticFieldLeak")
-    inner class LoginTask: AsyncTask<String, Void, User?>() {
+    inner class LoginTask : AsyncTask<String, Void, User?>() {
         override fun doInBackground(vararg params: String?): User? {
             return User.login(this@LoginActivity, params[0].orEmpty(), params[1].orEmpty())
         }

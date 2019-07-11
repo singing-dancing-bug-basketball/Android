@@ -10,7 +10,7 @@ class Question private constructor(
     val answer: Int?,
     var selected: Int?,
     val options: List<String>
-): Model(), Serializable {
+) : Model(), Serializable {
     companion object {
         @JvmStatic
         fun parse(JSONQuestion: JSONObject): Question {

@@ -11,7 +11,8 @@ import com.nickyc975.android.HistoryActivity
 import com.nickyc975.android.R
 import com.nickyc975.android.model.Question
 
-class HistoryQuestionAdapter(private val activity: HistoryActivity, private val questions: List<Question>): BaseAdapter() {
+class HistoryQuestionAdapter(private val activity: HistoryActivity, private val questions: List<Question>) :
+    BaseAdapter() {
     private val views: Array<View?> = arrayOfNulls(questions.size)
 
     @SuppressLint("SetTextI18n")

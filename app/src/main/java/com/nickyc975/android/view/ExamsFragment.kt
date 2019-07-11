@@ -19,7 +19,7 @@ import com.nickyc975.android.model.Exam
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class ExamsFragment: ToolbarFragment() {
+class ExamsFragment : ToolbarFragment() {
     private var needRefresh = false
     private lateinit var handler: Handler
     private lateinit var examList: ListView
@@ -40,7 +40,7 @@ class ExamsFragment: ToolbarFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         handler = @SuppressLint("HandlerLeak")
-        object: Handler() {
+        object : Handler() {
             override fun handleMessage(msg: Message) {
                 examAdapter.notifyDataSetChanged()
                 examsRefresh.isRefreshing = false
