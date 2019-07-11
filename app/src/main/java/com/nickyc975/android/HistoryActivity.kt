@@ -10,7 +10,6 @@ import android.widget.TextView
 import android.widget.Toast
 import com.nickyc975.android.adapter.HistoryQuestionAdapter
 import com.nickyc975.android.model.History
-import com.nickyc975.android.model.Question
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
