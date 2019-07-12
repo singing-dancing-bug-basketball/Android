@@ -14,6 +14,7 @@
     <string name="time">考试时间: %1$d 分钟</string>
     <string name="total_score">总分: %1$.2f</string>
     <string name="user_score">得分: %1$.2f</string>
+    <string name="answer">正确答案: %1$s</string>
     <string name="network_error">网络异常，请检查网络连接！</string>
     <string name="user_not_logedin">用户未登录！</string>
     <string name="invalid_username_password">用户名或密码无效</string>
