@@ -93,7 +93,7 @@ class History private constructor(
                 Date(JSONHistory.getLong("end_time")),
                 JSONHistory.getInt("duration"),
                 JSONHistory.getDouble("total_score"),
-                JSONHistory.getInt("num_questions"),
+                0,
                 JSONHistory.getDouble("user_score")
             )
         }

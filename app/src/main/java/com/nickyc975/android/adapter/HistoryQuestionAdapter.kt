@@ -23,15 +23,15 @@ class HistoryQuestionAdapter(private val activity: HistoryActivity, private val 
             val radioGroup = view.findViewById<RadioGroup>(R.id.options)
             for (index in 0 until question.options.size) {
                 val radio = RadioButton(activity)
-                radio.text = "$index. ${question.options[index]}"
+                radio.text = question.options[index]
                 radio.isEnabled = false
-                if (index == question.selected) {
+                if ((index + 1) == question.selected) {
                     radio.isChecked = true
                 }
                 radioGroup.addView(radio)
             }
             view.findViewById<TextView>(R.id.question).text = "$position. ${question.title} (${question.score}分)"
-            view.findViewById<TextView>(R.id.answer).text = "${question.answer}. ${question.options[question.answer!!]}"
+            view.findViewById<TextView>(R.id.answer).text = question.options[question.answer!!]
             views[position] = view
         }
         return views[position]!!

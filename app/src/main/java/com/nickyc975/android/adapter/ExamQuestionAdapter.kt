@@ -34,7 +34,7 @@ class ExamQuestionAdapter(private val activity: ExamActivity, private val questi
             val view = activity.layoutInflater.inflate(R.layout.question_item, parent, false)
             val radioGroup = view.findViewById<RadioGroup>(R.id.options)
             for (index in 0 until question.options.size) {
-                val radio = ValuableRadioButton(activity, index, question.options[index])
+                val radio = ValuableRadioButton(activity, index + 1, question.options[index])
                 radio.setOnCheckedChangeListener { buttonView, isChecked ->
                     if (isChecked) {
                         if (radioGroup.checkedRadioButtonId < 0) {
