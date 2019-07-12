@@ -31,7 +31,7 @@ class HistoryQuestionAdapter(private val activity: HistoryActivity, private val 
                 radioGroup.addView(radio)
             }
             view.findViewById<TextView>(R.id.question).text = "${position + 1}. ${question.title} (${question.score}分)"
-            view.findViewById<TextView>(R.id.answer).text = activity.getString(R.string.answer, question.options[question.answer!!])
+            view.findViewById<TextView>(R.id.answer).text = activity.getString(R.string.answer, question.options[question.answer!! - 1])
             views[position] = view
         }
         return views[position]!!
