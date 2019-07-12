@@ -19,7 +19,7 @@ interface FailHandler {
                 super.handleMessage(msg)
                 val messageId = when (msg?.peekData()?.getSerializable("reason") as FailReason) {
                     FailReason.NETWORK_ERROR -> R.string.network_error
-                    FailReason.USER_NOT_LOGEDIN -> R.string.network_error
+                    FailReason.USER_NOT_LOGEDIN -> R.string.user_not_logedin
                     FailReason.USERNAME_PASSWORD_ERROR -> R.string.invalid_username_password
                 }
                 Toast.makeText(context, messageId, Toast.LENGTH_SHORT).show()

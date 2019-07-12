@@ -1,6 +1,7 @@
 package com.nickyc975.android.model
 
 import android.content.Context
+import android.util.Log
 import com.nickyc975.android.FailHandler
 import com.nickyc975.android.FailHandler.Companion.FailReason
 import com.nickyc975.android.R
@@ -19,6 +20,9 @@ class History private constructor(
     questions: List<Question> = listOf()
 ) : Exam(id, title, deadline, time, totalScore, numQuestions, questions) {
     companion object {
+        @JvmStatic
+        private val LOG_TAG = "HistoryModel"
+
         @JvmStatic
         suspend fun list(context: Context): List<History> {
             if (!User.isLogedin(context)) {
@@ -39,6 +43,7 @@ class History private constructor(
             try {
                 val response = client.newCall(request).execute()
                 val result = JSONObject(response.body()?.string())
+                Log.d(LOG_TAG, result.toString())
                 val JSONHistories = result.getJSONArray("tests")
                 for (i in 0 until JSONHistories.length()) {
                     histories.add(parse(JSONHistories.getJSONObject(i)))
@@ -73,6 +78,7 @@ class History private constructor(
                 val questions = ArrayList<Question>()
                 val response = client.newCall(request).execute()
                 val result = JSONObject(response.body()?.string())
+                Log.d(LOG_TAG, result.toString())
                 val JSONQuestions = result.getJSONArray("questions")
                 for (i in 0 until JSONQuestions.length()) {
                     questions.add(Question.parse(JSONQuestions.getJSONObject(i)))

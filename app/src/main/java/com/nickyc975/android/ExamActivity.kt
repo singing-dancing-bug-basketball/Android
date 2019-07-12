@@ -110,10 +110,8 @@ class ExamActivity : AppCompatActivity(), FailHandler {
             button.isEnabled = false
             GlobalScope.launch {
                 exam = Exam.get(this@ExamActivity, exam)
-                if (exam.questions.isNotEmpty()) {
-                    questionAdapter = ExamQuestionAdapter(this@ExamActivity, exam.questions)
-                    startHandler.sendEmptyMessage(0)
-                }
+                questionAdapter = ExamQuestionAdapter(this@ExamActivity, exam.questions)
+                startHandler.sendEmptyMessage(0)
             }
         }
     }

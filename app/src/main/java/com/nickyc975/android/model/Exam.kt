@@ -1,6 +1,7 @@
 package com.nickyc975.android.model
 
 import android.content.Context
+import android.util.Log
 import com.nickyc975.android.FailHandler
 import com.nickyc975.android.FailHandler.Companion.FailReason
 import com.nickyc975.android.R
@@ -23,6 +24,9 @@ open class Exam protected constructor(
 ) : Model(), Serializable {
     companion object {
         @JvmStatic
+        private val LOG_TAG = "ExamModel"
+
+        @JvmStatic
         suspend fun list(context: Context): List<Exam> {
             if (!User.isLogedin(context)) {
                 (context as FailHandler).onFail(FailReason.USER_NOT_LOGEDIN)
@@ -42,6 +46,7 @@ open class Exam protected constructor(
             try {
                 val response = client.newCall(request).execute()
                 val result = JSONObject(response.body()?.string())
+                Log.d(LOG_TAG, result.toString())
                 val JSONExams = result.getJSONArray("tests")
                 for (i in 0 until JSONExams.length()) {
                     exams.add(parse(JSONExams.getJSONObject(i)))
@@ -73,6 +78,7 @@ open class Exam protected constructor(
                 val questions = ArrayList<Question>()
                 val response = client.newCall(request).execute()
                 val result = JSONObject(response.body()?.string())
+                Log.d(LOG_TAG, result.toString())
                 val JSONQuestions = result.getJSONArray("questions")
                 for (i in 0 until JSONQuestions.length()) {
                     questions.add(Question.parse(JSONQuestions.getJSONObject(i)))
@@ -116,6 +122,7 @@ open class Exam protected constructor(
 
             try {
                 val response = JSONObject(client.newCall(request).execute().body()?.string())
+                Log.d(LOG_TAG, response.toString())
                 if (response.getInt("status") == 200) {
                     return true
                 }

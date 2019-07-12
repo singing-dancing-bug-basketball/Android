@@ -34,10 +34,8 @@ class HistoryActivity : AppCompatActivity(), FailHandler {
         history = intent.getSerializableExtra("history") as History
         GlobalScope.launch {
             history = History.get(this@HistoryActivity, history)
-            if (history.questions.isNotEmpty()) {
-                questionAdapter = HistoryQuestionAdapter(this@HistoryActivity, history.questions)
-                handler.sendEmptyMessage(0)
-            }
+            questionAdapter = HistoryQuestionAdapter(this@HistoryActivity, history.questions)
+            handler.sendEmptyMessage(0)
         }
     }
 
